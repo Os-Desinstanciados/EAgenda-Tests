@@ -34,13 +34,22 @@ public class Contato : EntidadeBase<Contato>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Nome) || Nome.Length < 2 || Nome.Length > 100)
+        if (string.IsNullOrWhiteSpace(Nome))
+            erros.Add("O campo \"Nome\" deve ser preenchido.");        
+        
+        if (Nome.Length < 2 || Nome.Length > 100)
             erros.Add("O campo \"Nome\" deve conter entre 2 e 100 caracteres.");
 
-        if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (string.IsNullOrWhiteSpace(Email))
+            erros.Add("O campo \"Email\" deve ser preenchido.");
+
+        else if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             erros.Add("O campo \"E-mail\" deve conter um endereço de e-mail válido.");
 
-        if (!Regex.IsMatch(Telefone, @"^\(\d{2}\) \d{4,5}-\d{4}$"))
+        if (string.IsNullOrWhiteSpace(Telefone))
+            erros.Add("O campo \"Telefone\" deve ser preenchido.");
+        
+        else if (!Regex.IsMatch(Telefone, @"^\(\d{2}\) \d{4,5}-\d{4}$"))
             erros.Add("O campo \"Telefone\" deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX.");
 
         if (!string.IsNullOrWhiteSpace(Cargo) && Cargo.Length > 100)
