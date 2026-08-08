@@ -43,7 +43,10 @@ public class Compromisso : EntidadeBase<Compromisso>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Assunto) || Assunto.Length < 2 || Assunto.Length > 100)
+        if (string.IsNullOrWhiteSpace(Assunto))
+            erros.Add("O campo \"Assunto\" deve ser preenchido.");
+        
+        else if (Assunto.Length < 2 || Assunto.Length > 100)
             erros.Add("O campo \"Assunto\" deve conter entre 2 e 100 caracteres.");
 
         if (DataOcorrencia == default)
@@ -52,10 +55,10 @@ public class Compromisso : EntidadeBase<Compromisso>
         if (HoraInicio == default)
             erros.Add("O campo \"Hora de Início\" deve ser preenchido.");
 
-        if (HoraTermino == default)
+        else if (HoraTermino == default)
             erros.Add("O campo \"Hora de Término\" deve ser preenchido.");
 
-        if (HoraTermino <= HoraInicio)
+        else if (HoraTermino <= HoraInicio)
             erros.Add("A hora de término deve ser posterior à hora de início.");
 
         if (!Enum.IsDefined(Tipo))
