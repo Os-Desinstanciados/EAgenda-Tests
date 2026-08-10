@@ -7,7 +7,7 @@ namespace eAgenda.Testes.Unidade.Modulos.ModuloCategoria;
 public sealed class CategoriaTestes
 {
     [TestMethod]
-    public void Validar_ComNomeVazio_DeveRetornarErro()
+    public void Validar_ComTituloVazio_DeveRetornarErro()
     {
         //Arranjo [Configura dados do teste]
         Categoria categoria = new Categoria(
@@ -26,7 +26,7 @@ public sealed class CategoriaTestes
     }
 
     [TestMethod]
-    public void Validar_ComNomeCurto_DeveRetornarErro()
+    public void Validar_ComTituloCurto_DeveRetornarErro()
     {
         //Arranjo [Configura dados do teste]
         Categoria categoria = new Categoria(
@@ -45,7 +45,7 @@ public sealed class CategoriaTestes
     }
 
     [TestMethod]
-    public void Validar_ComNomeLongo_DeveRetornarErro()
+    public void Validar_ComTituloLongo_DeveRetornarErro()
     {
         //Arranjo [Configura dados do teste]
         Categoria categoria = new Categoria(
@@ -58,7 +58,7 @@ public sealed class CategoriaTestes
         //Asserção [Checa o resultado comparado com o esperado]
         Assert.HasCount(1, erros);
         Assert.AreEqual(
-            "O campo \"Nome\" deve conter entre 2 e 100 caracteres.",
+            "O campo \"Título\" deve conter entre 2 e 100 caracteres.",
             erros.First()
         );
     }
