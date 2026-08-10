@@ -5,7 +5,7 @@ namespace eAgenda.Dominio.Modulos.ModuloCompromisso;
 
 public class Compromisso : EntidadeBase<Compromisso>
 {
-    public string Assunto { get; set; } = string.Empty;
+    public string Assunto { get; set; }
     public DateTime DataOcorrencia { get; set; } = DateTime.Today;
     public TimeSpan HoraInicio { get; set; }
     public TimeSpan HoraTermino { get; set; }

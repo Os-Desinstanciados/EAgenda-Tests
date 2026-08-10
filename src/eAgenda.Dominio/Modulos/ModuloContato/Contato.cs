@@ -5,9 +5,9 @@ namespace eAgenda.Dominio.Modulos.ModuloContato;
 
 public class Contato : EntidadeBase<Contato>
 {
-    public string Nome { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Telefone { get; set; } = string.Empty;
+    public string Nome { get; set; }
+    public string Email { get; set; }
+    public string Telefone { get; set; } 
     public string? Cargo { get; set; }
     public string? Empresa { get; set; }
 

@@ -1,6 +1,7 @@
 using eAgenda.Dominio.Modulos.ModuloCompromisso;
 using eAgenda.Infra.Modulos.ModuloCompromisso;
 using eAgenda.Testes.Integracao.Compartilhado.Orm;
+using FizzWare.NBuilder;
 
 namespace eAgenda.Testes.Integracao.ModuloCompromisso;
 
@@ -11,7 +12,12 @@ public sealed class RepositorioCompromissoEmOrmTests : RepositorioEmOrmBaseTests
     public void CadastrarESelecionarPorId_CarregaRelacionamentosDoCompromisso()
     {
         // Arranjo
-        Compromisso compromisso = CriarComprimissoValido();
+        Compromisso compromisso = Builder<Compromisso>
+            .CreateNew()
+            .With(c => c.HoraInicio = TimeSpan.FromHours(20))
+            .With(c => c.HoraTermino = TimeSpan.FromHours(23))
+            .With(c => c.Tipo = TipoCompromisso.Presencial)
+            .Build();
 
         RepositorioCompromissoEmOrm repositorio = new RepositorioCompromissoEmOrm(dbContext);
 
@@ -19,15 +25,16 @@ public sealed class RepositorioCompromissoEmOrmTests : RepositorioEmOrmBaseTests
         repositorio.Cadastrar(compromisso);
         dbContext.ChangeTracker.Clear();
 
+        Compromisso? compromissoSelecionado = repositorio.SelecionarPorId(compromisso.Id);
+
         //Asserção
         Assert.IsNotNull(compromisso);
-        Assert.AreEqual("Show", compromisso.Assunto);
-        Assert.AreEqual(new DateTime(2023, 03, 08), compromisso.DataOcorrencia);
+        Assert.AreEqual("Assunto1", compromisso.Assunto);
         Assert.AreEqual(TimeSpan.FromHours(20), compromisso.HoraInicio);
         Assert.AreEqual(TimeSpan.FromHours(23), compromisso.HoraTermino);
         Assert.AreEqual(TipoCompromisso.Presencial, compromisso.Tipo);
-        Assert.AreEqual("Belo Horizonte", compromisso.Local);
-        Assert.AreEqual("instagram.com/davidguetta", compromisso.Link);
+        Assert.AreEqual("Local1", compromisso.Local);
+        Assert.AreEqual("Link1", compromisso.Link);
         Assert.IsNull(compromisso.Contato);
     }
 
@@ -35,84 +42,60 @@ public sealed class RepositorioCompromissoEmOrmTests : RepositorioEmOrmBaseTests
     public void Editar_AtualizaCompromissoExistente()
     {
         // Arranjo
-        Compromisso compromisso = CriarComprimissoValido();
+        Compromisso compromisso = Builder<Compromisso>
+            .CreateNew()
+            .Persist();
+
+        Compromisso compromissoAtualizado = Builder<Compromisso>
+            .CreateNew()
+            .With(c => c.Assunto = "AssuntoAtualizado")
+            .Build();
 
         RepositorioCompromissoEmOrm repositorio = new RepositorioCompromissoEmOrm(dbContext);
 
-        repositorio.Cadastrar(compromisso);
-
-        Compromisso compromissoAtualizado = new Compromisso(
-            "Teatro",
-            new DateTime(2023, 03, 08),
-            TimeSpan.FromHours(16),
-            TimeSpan.FromHours(19),
-            TipoCompromisso.Presencial,
-            "Teatro Marajoara",
-            "instagram.com/teatromarajuara",
-            null
-        );
-
         // Ação
-        bool conseguiuEditar = repositorio.Editar(compromisso.Id, compromissoAtualizado);
+        bool conseguiuEditar = repositorioCompromisso.Editar(compromisso.Id, compromissoAtualizado);
         dbContext.ChangeTracker.Clear();
+
+        Compromisso? compromissoSelecionado = repositorio.SelecionarPorId(compromisso.Id);
 
         // Asserção
         Assert.IsTrue(conseguiuEditar);
-        Assert.AreEqual("Teatro",
-            repositorio.SelecionarPorId(compromisso.Id)!.Assunto
-        );
+        Assert.IsNotNull(compromissoSelecionado);
+        Assert.AreEqual("AssuntoAtualizado", compromissoAtualizado.Assunto);
     }
 
     [TestMethod]
     public void Excluir_RemoveCompromissoExistente()
     {
         // Arranjo
-        Compromisso compromisso = CriarComprimissoValido();
-
-        RepositorioCompromissoEmOrm repositorio = new RepositorioCompromissoEmOrm(dbContext);
-
-        repositorio.Cadastrar(compromisso);
+        Compromisso compromisso = Builder<Compromisso>
+            .CreateNew()
+            .Persist();
 
         // Ação
-        bool conseguiuExcluir = repositorio.Excluir(compromisso.Id);
+        bool conseguiuExcluir = repositorioCompromisso.Excluir(compromisso.Id);
         dbContext.ChangeTracker.Clear();
+
+        Compromisso? compromissoSelecionado = repositorioCompromisso.SelecionarPorId(compromisso.Id);
 
         // Asserção
         Assert.IsTrue(conseguiuExcluir);
-        Assert.IsNull(repositorio.SelecionarPorId(compromisso.Id));
+        Assert.IsNull(compromissoSelecionado);
     }
 
     [TestMethod]
     public void SelecionarTodos_RetornaCompromissosCadastrados()
     {
-        // Arranjo
-        Compromisso compromisso = CriarComprimissoValido();
+        // Arranjo // Ação
+        IList<Compromisso> compromisso = Builder<Compromisso>
+            .CreateListOfSize(3)
+            .Persist();
 
-        RepositorioCompromissoEmOrm repositorio = new RepositorioCompromissoEmOrm(dbContext);
-
-        repositorio.Cadastrar(compromisso);
-
-        // Ação
-        List<Compromisso> compromissos = repositorio.SelecionarTodos();
         dbContext.ChangeTracker.Clear();
 
         // Asserção
-        Assert.IsNotEmpty(compromissos);
+        Assert.HasCount(3, repositorioCompromisso.SelecionarTodos());
     }
 
-    private Compromisso CriarComprimissoValido()
-    {
-        Compromisso compromisso = new Compromisso(
-            "Show",
-            new DateTime(2023, 03, 08),
-            TimeSpan.FromHours(20),
-            TimeSpan.FromHours(23),
-            TipoCompromisso.Presencial,
-            "Belo Horizonte",
-            "instagram.com/davidguetta",
-            null
-        );
-
-        return compromisso;
-    }
 }

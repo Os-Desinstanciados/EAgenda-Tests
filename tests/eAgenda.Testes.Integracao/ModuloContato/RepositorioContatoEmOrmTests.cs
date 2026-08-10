@@ -1,6 +1,7 @@
 using eAgenda.Dominio.Modulos.ModuloContato;
 using eAgenda.Infra.Modulos.ModuloContato;
 using eAgenda.Testes.Integracao.Compartilhado.Orm;
+using FizzWare.NBuilder;
 
 namespace eAgenda.Testes.Integracao.ModuloContato;
 
@@ -11,8 +12,10 @@ public sealed class RepositorioContatoEmOrmTests : RepositorioEmOrmBaseTests
     public void CadastrarESelecionarPorId_CarregaRelacionamentosDoContato()
     {
         // Arranjo
-        Contato contato = CriaContatoValido();
-        
+        Contato contato = Builder<Contato>
+            .CreateNew()
+            .Build();
+
         RepositorioContatoEmOrm repositorio = new RepositorioContatoEmOrm(dbContext);
 
         // Ação
@@ -23,92 +26,70 @@ public sealed class RepositorioContatoEmOrmTests : RepositorioEmOrmBaseTests
 
         //Asserção
         Assert.IsNotNull(contatoSelecionado);
-        Assert.AreEqual("Contato Teste", contatoSelecionado.Nome);
-        Assert.AreEqual("teste@hotmail.com", contatoSelecionado.Email);
-        Assert.AreEqual("(49) 9999-9999", contatoSelecionado.Telefone);
-        Assert.AreEqual("Administrador", contatoSelecionado.Cargo);
-        Assert.AreEqual("Empresa", contatoSelecionado.Empresa);
-
+        Assert.AreEqual("Nome1", contatoSelecionado.Nome);
+        Assert.AreEqual("Email1", contatoSelecionado.Email);
+        Assert.AreEqual("Telefone1", contatoSelecionado.Telefone);
+        Assert.AreEqual("Cargo1", contatoSelecionado.Cargo);
+        Assert.AreEqual("Empresa1", contatoSelecionado.Empresa);
     }
 
     [TestMethod]
     public void Editar_AtualizaContatoExistente()
     {
         // Arranjo
-        Contato contato = CriaContatoValido();
+        Contato contato = Builder<Contato>
+            .CreateNew()
+            .Persist();
+
+        Contato contatoAtualizado = Builder<Contato>
+            .CreateNew()
+            .With(c => c.Nome = "ContatoAtualizado")
+            .Build();
 
         RepositorioContatoEmOrm repositorio = new RepositorioContatoEmOrm(dbContext);
 
-        repositorio.Cadastrar(contato);
-        
-        Contato contatoAtualizado = new Contato(
-            "Contato Editado",
-            "testeEditar@hotmail.com",
-            "(49) 9999-4444",
-            "Assistente",
-            "Mercado"
-        );
-
         // Ação
-        bool conseguiuEditar = repositorio.Editar(contato.Id, contatoAtualizado);
+        bool conseguiuEditar = repositorioContato.Editar(contato.Id, contatoAtualizado);
         dbContext.ChangeTracker.Clear();
+
+        Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
 
         // Asserção
         Assert.IsTrue(conseguiuEditar);
-        Assert.AreEqual(
-            "Contato Editado",
-            repositorio.SelecionarPorId(contato.Id)!.Nome
-        );
+        Assert.IsNotNull(contatoSelecionado);
+        Assert.AreEqual("ContatoAtualizado", contatoAtualizado.Nome);
     }
 
     [TestMethod]
     public void Excluir_RemoveContatoExistente()
     {
         // Arranjo
-        Contato contato = CriaContatoValido();
-
-        RepositorioContatoEmOrm repositorio = new RepositorioContatoEmOrm(dbContext);
-
-        repositorio.Cadastrar(contato);
+        Contato contato = Builder<Contato>
+            .CreateNew()
+            .Persist();
 
         // Ação
-        bool conseguiuExcluir = repositorio.Excluir(contato.Id);
+        bool conseguiuExcluir = repositorioContato.Excluir(contato.Id);
         dbContext.ChangeTracker.Clear();
+
+        Contato? contatoSelecionado = repositorioContato.SelecionarPorId(contato.Id);
 
         // Asserção
         Assert.IsTrue(conseguiuExcluir);
-        Assert.IsNull(repositorio.SelecionarPorId(contato.Id));
+        Assert.IsNull(contatoSelecionado);
     }
 
     [TestMethod]
     public void SelecionarTodos_RetornaContatosCadastrados()
     {
-        // Arranjo
-        Contato contato = CriaContatoValido();
+        // Arranjo // Ação
+        IList<Contato> contato = Builder<Contato>
+            .CreateListOfSize(3)
+            .Persist();
 
-        RepositorioContatoEmOrm repositorio = new RepositorioContatoEmOrm(dbContext);
-
-        repositorio.Cadastrar(contato);
-
-        // Ação
-        List<Contato> contatos = repositorio.SelecionarTodos();
         dbContext.ChangeTracker.Clear();
-
+        
         // Asserção
-        Assert.IsNotEmpty(contatos);
+        Assert.HasCount(3, repositorioContato.SelecionarTodos());
     }
-
-    private Contato CriaContatoValido()
-    {
-        Contato contato = new Contato(
-            "Contato Teste",
-            "teste@hotmail.com",
-            "(49) 9999-9999",
-            "Administrador",
-            "Empresa"
-        );
-
-        return contato;
-    }
-
 }
