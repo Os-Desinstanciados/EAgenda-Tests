@@ -1,4 +1,3 @@
-using eAgenda.Dominio.Compartilhado;
 using eAgenda.Infra.Compartilhado.Orm;
 using Microsoft.EntityFrameworkCore;
 

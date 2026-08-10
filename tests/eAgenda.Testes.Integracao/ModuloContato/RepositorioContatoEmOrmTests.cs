@@ -1,8 +1,6 @@
 using eAgenda.Dominio.Modulos.ModuloContato;
-using eAgenda.Infra.Compartilhado.Orm;
 using eAgenda.Infra.Modulos.ModuloContato;
 using eAgenda.Testes.Integracao.Compartilhado.Orm;
-using Microsoft.EntityFrameworkCore;
 
 namespace eAgenda.Testes.Integracao.ModuloContato;
 
