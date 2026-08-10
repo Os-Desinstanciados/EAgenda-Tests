@@ -1,6 +1,8 @@
 
 using eAgenda.Dominio.Modulos.ModuloCategoria;
 
+namespace eAgenda.Testes.Unidade.Modulos.ModuloCategoria;
+
 [TestClass]
 public sealed class CategoriaTestes
 {
