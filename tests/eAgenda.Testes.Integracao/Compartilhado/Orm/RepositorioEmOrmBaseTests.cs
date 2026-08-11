@@ -1,8 +1,10 @@
 using eAgenda.Dominio.Modulos.ModuloCompromisso;
 using eAgenda.Dominio.Modulos.ModuloContato;
+using eAgenda.Dominio.Modulos.ModuloTarefa;
 using eAgenda.Infra.Compartilhado.Orm;
 using eAgenda.Infra.Modulos.ModuloCompromisso;
 using eAgenda.Infra.Modulos.ModuloContato;
+using eAgenda.Infra.Modulos.ModuloTarefa;
 using FizzWare.NBuilder;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +15,7 @@ public abstract class RepositorioEmOrmBaseTests
     protected EAgendaDbContext dbContext = null!;
     protected RepositorioContatoEmOrm repositorioContato = null!;
     protected RepositorioCompromissoEmOrm repositorioCompromisso = null!;
+    protected RepositorioTarefaEmOrm repositorioTarefa = null!;
 
     [TestInitialize]
     public void InicializarContexto()
@@ -20,6 +23,7 @@ public abstract class RepositorioEmOrmBaseTests
         dbContext = CriarDbContext();
         repositorioContato = new RepositorioContatoEmOrm(dbContext);
         repositorioCompromisso = new RepositorioCompromissoEmOrm(dbContext);
+        repositorioTarefa = new RepositorioTarefaEmOrm(dbContext);
 
         // Contato
         BuilderSetup.SetCreatePersistenceMethod<Contato>((contato) =>
@@ -49,6 +53,21 @@ public abstract class RepositorioEmOrmBaseTests
             foreach (Compromisso c in compromissos)
                 repositorioCompromisso.Cadastrar(c);
                 
+            dbContext.ChangeTracker.Clear();
+        });
+
+        // Tarefa
+        BuilderSetup.SetCreatePersistenceMethod<Tarefa>((tarefa) =>
+        {
+            repositorioTarefa.Cadastrar(tarefa);
+            dbContext.ChangeTracker.Clear();
+        });
+
+        BuilderSetup.SetCreatePersistenceMethod<IList<Tarefa>>((tarefas) =>
+        {
+            foreach (Tarefa t in tarefas)
+                repositorioTarefa.Cadastrar(t);
+
             dbContext.ChangeTracker.Clear();
         });
     }
