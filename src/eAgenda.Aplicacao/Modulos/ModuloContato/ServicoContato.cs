@@ -81,8 +81,8 @@ public class ServicoContato : ServicoBase<Contato>
         if (contato == null)
             return Falha(string.Empty, "Contato não encontrado.");
 
-        // if (PossuiCompromissosVinculados(id))
-        //     return Falha(string.Empty, "Não é possível excluir este contato, pois ele possui compromissos vinculados.");
+        if (PossuiCompromissosVinculados(id))
+            return Falha(string.Empty, "Não é possível excluir este contato, pois ele possui compromissos vinculados.");
 
         repositorioContato.Excluir(id);
 
