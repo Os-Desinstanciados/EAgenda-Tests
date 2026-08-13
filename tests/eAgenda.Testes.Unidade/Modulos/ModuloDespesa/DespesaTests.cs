@@ -20,8 +20,8 @@ public sealed class DespesaTestes
         Despesa despesa = new Despesa(
             string.Empty,
             new DateTime(2026, 08, 08),            
-            100,
-            0,
+            100m,
+            FormaPagamento.AVista,
             new List<Categoria> { categoria }            
         );
 
@@ -45,8 +45,8 @@ public sealed class DespesaTestes
         Despesa despesa = new Despesa(
             new string('A', 1),
             new DateTime(2026, 08, 08),            
-            100,
-            0,
+            100m,
+            FormaPagamento.AVista,
             new List<Categoria> { categoria }
         );
 
@@ -71,8 +71,8 @@ public sealed class DespesaTestes
         Despesa despesa = new Despesa(
             new string('A', 101),
             new DateTime(2026, 08, 08),            
-            100,
-            0,
+            100m,
+            FormaPagamento.AVista,
             new List<Categoria> { categoria }
         );
 
@@ -96,8 +96,8 @@ public sealed class DespesaTestes
         Despesa despesa = new Despesa(
             "Despesa",
             new DateTime (default),
-            100,
-            0,
+            100m,
+            FormaPagamento.AVista,
             new List<Categoria> { categoria }
         );
 
@@ -122,7 +122,7 @@ public sealed class DespesaTestes
             "Despesa",
             new DateTime(2023, 03, 08),
             0,
-            0,
+            FormaPagamento.AVista,
             new List<Categoria> { categoria }
         );
 
@@ -172,7 +172,7 @@ public sealed class DespesaTestes
             "Despesa",
             new DateTime(2023, 03, 08),
             100,
-            (FormaPagamento)0, //Cast is redundant.
+            FormaPagamento.AVista, //Cast is redundant.
             new List<Categoria> { }
         );
 

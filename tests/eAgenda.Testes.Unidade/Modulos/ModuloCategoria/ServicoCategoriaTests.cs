@@ -99,7 +99,7 @@ public sealed class ServicoCategoriaTests
             .Returns(categoria);
 
         repositorioDespesa
-            .Setup(c => c.SelecionarTodos())
+            .Setup(d => d.SelecionarTodos())
             .Returns([]);
 
         ServicoCategoria servicoCategoria = new ServicoCategoria(
@@ -131,7 +131,7 @@ public sealed class ServicoCategoriaTests
             .Returns(categoria);
 
         repositorioDespesa
-            .Setup(c => c.SelecionarTodos())
+            .Setup(d => d.SelecionarTodos())
             .Returns([new Despesa(
                 "TesteDeDespesa",
                 new DateTime(2026, 12, 08),
