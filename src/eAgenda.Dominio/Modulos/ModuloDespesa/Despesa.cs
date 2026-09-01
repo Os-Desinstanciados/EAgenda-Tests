@@ -34,7 +34,10 @@ public class Despesa : EntidadeBase<Despesa>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Descricao) || Descricao.Length < 2 || Descricao.Length > 100)
+        if (string.IsNullOrWhiteSpace(Descricao))
+            erros.Add("O campo \"Descrição\" deve ser preenchido.");
+            
+        else if(Descricao.Length < 2 || Descricao.Length > 100)
             erros.Add("O campo \"Descrição\" deve conter entre 2 e 100 caracteres.");
 
         if (DataOcorrencia == default)
