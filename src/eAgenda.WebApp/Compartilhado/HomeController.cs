@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace eAgenda.WebApp.Compartilhado.Apresentacao;
+namespace eAgenda.WebApp.Compartilhado;
 
 public class HomeController : Controller
 {

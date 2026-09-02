@@ -1,4 +1,4 @@
-namespace eAgenda.WebApp.Compartilhado.Apresentacao.Mapping;
+namespace eAgenda.WebApp.Compartilhado.Mapping;
 
 public sealed class AutoMapperOptions
 {

@@ -36,9 +36,11 @@ if (app.Environment.IsDevelopment())
 
 // Middlewares de roteamento
 app.UseRouting();
-app.MapDefaultControllerRoute();
 
-app.MapHealthChecks("/health");
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapDefaultControllerRoute();
 
 // Execução do Servidor
 app.Run();
