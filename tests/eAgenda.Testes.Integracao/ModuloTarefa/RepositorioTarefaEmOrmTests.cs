@@ -1,24 +1,32 @@
 using eAgenda.Dominio.Modulos.ModuloTarefa;
+using eAgenda.Infra.Compartilhado.Orm;
 using eAgenda.Infra.Modulos.ModuloTarefa;
 using eAgenda.Testes.Integracao.Compartilhado.Orm;
-using FizzWare.NBuilder;
 
 namespace eAgenda.Testes.Integracao.ModuloTarefa;
 
 [TestClass]
 public sealed class RepositorioTarefaEmOrmTests : RepositorioEmOrmBaseTests
 {
+    private EAgendaDbContext dbContext = null!;
+    private RepositorioTarefaEmOrm repositorio = null!;
+
+    [TestInitialize]
+    public void InicializarRepositorio()
+    {
+        dbContext = CriarDbContext();
+
+        repositorio = new RepositorioTarefaEmOrm(dbContext);
+    }
+
     [TestMethod]
     public void CadastrarESelecionarPorId_CarregaRelacionamentosDaTarefa()
     {
         // Arranjo
-        Tarefa tarefa = Builder<Tarefa>
-            .CreateNew()
-            .With(t => t.Titulo = "Estudar Testes")
-            .With(t => t.Prioridade = PrioridadeTarefa.Normal)
-            .Build();
-
-        RepositorioTarefaEmOrm repositorio = new RepositorioTarefaEmOrm(dbContext);
+        Tarefa tarefa = new Tarefa(
+            "Estudar Testes",
+            PrioridadeTarefa.Normal
+        );
 
         // Ação
         repositorio.Cadastrar(tarefa);
@@ -36,21 +44,24 @@ public sealed class RepositorioTarefaEmOrmTests : RepositorioEmOrmBaseTests
     public void Editar_AtualizaTarefaExistente()
     {
         // Arranjo
-        Tarefa tarefa = Builder<Tarefa>
-            .CreateNew()
-            .Persist();
+        Tarefa tarefa = new Tarefa(
+            "Tarefa Original",
+            PrioridadeTarefa.Normal
+        );
 
-        Tarefa tarefaAtualizada = Builder<Tarefa>
-            .CreateNew()
-            .With(t => t.Titulo = "Tarefa Atualizada")
-            .With(t => t.Prioridade = PrioridadeTarefa.Alta)
-            .Build();
+        repositorio.Cadastrar(tarefa);
+
+        Tarefa tarefaAtualizada = new Tarefa(
+            "Tarefa Atualizada",
+            PrioridadeTarefa.Alta
+        );
 
         // Ação
-        bool conseguiuEditar = repositorioTarefa.Editar(tarefa.Id, tarefaAtualizada);
+        bool conseguiuEditar = repositorio.Editar(tarefa.Id, tarefaAtualizada);
+
         dbContext.ChangeTracker.Clear();
 
-        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+        Tarefa? tarefaSelecionada = repositorio.SelecionarPorId(tarefa.Id);
 
         // Asserção
         Assert.IsTrue(conseguiuEditar);
@@ -63,15 +74,19 @@ public sealed class RepositorioTarefaEmOrmTests : RepositorioEmOrmBaseTests
     public void Excluir_RemoveTarefaExistente()
     {
         // Arranjo
-        Tarefa tarefa = Builder<Tarefa>
-            .CreateNew()
-            .Persist();
+        Tarefa tarefa = new Tarefa(
+            "Tarefa Teste",
+            PrioridadeTarefa.Normal
+        );
+
+        repositorio.Cadastrar(tarefa);
 
         // Ação
-        bool conseguiuExcluir = repositorioTarefa.Excluir(tarefa.Id);
+        bool conseguiuExcluir = repositorio.Excluir(tarefa.Id);
+
         dbContext.ChangeTracker.Clear();
 
-        Tarefa? tarefaSelecionada = repositorioTarefa.SelecionarPorId(tarefa.Id);
+        Tarefa? tarefaSelecionada = repositorio.SelecionarPorId(tarefa.Id);
 
         // Asserção
         Assert.IsTrue(conseguiuExcluir);
@@ -81,14 +96,32 @@ public sealed class RepositorioTarefaEmOrmTests : RepositorioEmOrmBaseTests
     [TestMethod]
     public void SelecionarTodos_RetornaTarefasCadastradas()
     {
-        // Arranjo // Ação
-        IList<Tarefa> tarefas = Builder<Tarefa>
-            .CreateListOfSize(3)
-            .Persist();
+        // Arranjo
+        Tarefa tarefa1 = new Tarefa(
+            "Tarefa 1",
+            PrioridadeTarefa.Baixa
+        );
+
+        Tarefa tarefa2 = new Tarefa(
+            "Tarefa 2",
+            PrioridadeTarefa.Normal
+        );
+
+        Tarefa tarefa3 = new Tarefa(
+            "Tarefa 3",
+            PrioridadeTarefa.Alta
+        );
+
+        repositorio.Cadastrar(tarefa1);
+        repositorio.Cadastrar(tarefa2);
+        repositorio.Cadastrar(tarefa3);
 
         dbContext.ChangeTracker.Clear();
 
+        // Ação
+        List<Tarefa> tarefas = repositorio.SelecionarTodos();
+
         // Asserção
-        Assert.HasCount(3, repositorioTarefa.SelecionarTodos());
+        Assert.HasCount(3, tarefas);
     }
 }
