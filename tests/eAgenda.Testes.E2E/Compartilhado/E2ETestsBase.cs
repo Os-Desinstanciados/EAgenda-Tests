@@ -1,4 +1,4 @@
-using eAgenda.Testes.E2E.ModuloAutenticacao;
+using eAgenda.Testes.E2E.Modulos.ModuloAutenticacao;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright.MSTest;

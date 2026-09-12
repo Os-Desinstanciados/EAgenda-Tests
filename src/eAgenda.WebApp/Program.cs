@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuração do container de injeção de dependência
-builder.Services.AddInfraRepositories(builder.Configuration, builder.Logging);
+builder.Services.AddInfraRepositories(
+    builder.Configuration,
+    builder.Logging,
+    builder.Environment);
 
 builder.Services.AddApplicationServices();
 

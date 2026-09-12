@@ -1,6 +1,6 @@
 using Microsoft.Playwright;
 
-namespace eAgenda.Testes.E2E.ModuloAutenticacao;
+namespace eAgenda.Testes.E2E.Modulos.ModuloAutenticacao;
 
 public sealed class EntrarPage(
     IPage page,

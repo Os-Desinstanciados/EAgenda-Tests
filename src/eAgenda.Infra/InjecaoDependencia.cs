@@ -14,7 +14,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace eAgenda.Infra;
 
@@ -23,10 +25,16 @@ public static class InjecaoDependencia
     public static void AddInfraRepositories(
         this IServiceCollection services,
         IConfiguration configuration,
-        ILoggingBuilder logging
+        ILoggingBuilder logging,
+        IHostEnvironment environment
     )
     {
-        services.AddSerilogLogger(configuration, logging);
+        // Injeta logs do Serilog
+        Log.Logger = SerilogFactory.Create(configuration, environment);
+
+        logging.ClearProviders();
+
+        services.AddSerilog(Log.Logger);
 
         services.AddDbContext<EAgendaDbContext>(options =>
        {
@@ -44,8 +52,8 @@ public static class InjecaoDependencia
                opt.EnableRetryOnFailure(3);
            });
        });
-       
-       // Configuração do Usuário no Identity
+
+        // Configuração do Usuário no Identity
         services.AddIdentityCore<IdentityUser<Guid>>(options =>
         {
             options.User.RequireUniqueEmail = true;
@@ -64,10 +72,10 @@ public static class InjecaoDependencia
         .AddSignInManager()
         .AddDefaultTokenProviders();
 
-       services.AddScoped<IRepositorioContato, RepositorioContatoEmOrm>();
-       services.AddScoped<IRepositorioCompromisso, RepositorioCompromissoEmOrm>();
-       services.AddScoped<IRepositorioCategoria, RepositorioCategoriaEmOrm>();
-       services.AddScoped<IRepositorioDespesa, RepositorioDespesaEmOrm>();
-       services.AddScoped<IRepositorioTarefa, RepositorioTarefaEmOrm>();
+        services.AddScoped<IRepositorioContato, RepositorioContatoEmOrm>();
+        services.AddScoped<IRepositorioCompromisso, RepositorioCompromissoEmOrm>();
+        services.AddScoped<IRepositorioCategoria, RepositorioCategoriaEmOrm>();
+        services.AddScoped<IRepositorioDespesa, RepositorioDespesaEmOrm>();
+        services.AddScoped<IRepositorioTarefa, RepositorioTarefaEmOrm>();
     }
 }

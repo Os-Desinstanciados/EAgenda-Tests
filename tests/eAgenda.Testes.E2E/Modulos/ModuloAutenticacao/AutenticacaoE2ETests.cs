@@ -1,6 +1,6 @@
 ﻿using eAgenda.Testes.E2E.Compartilhado;
 
-namespace eAgenda.Testes.E2E.ModuloAutenticacao;
+namespace eAgenda.Testes.E2E.Modulos.ModuloAutenticacao;
 
 [TestClass]
 public sealed class AutenticacaoE2ETests : E2ETestsBase
