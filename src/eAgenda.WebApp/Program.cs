@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuração do container de injeção de dependência
-builder.Services.AddInfraRepositories(builder.Configuration, builder.Logging);
+builder.Services.AddInfraRepositories(
+    builder.Configuration,
+    builder.Logging,
+    builder.Environment);
 
 builder.Services.AddApplicationServices();
 
@@ -36,9 +39,11 @@ if (app.Environment.IsDevelopment())
 
 // Middlewares de roteamento
 app.UseRouting();
-app.MapDefaultControllerRoute();
 
-app.MapHealthChecks("/health");
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapDefaultControllerRoute();
 
 // Execução do Servidor
 app.Run();

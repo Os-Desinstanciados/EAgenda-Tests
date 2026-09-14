@@ -4,7 +4,7 @@ namespace eAgenda.Dominio.Modulos.ModuloTarefa;
 
 public class Tarefa : EntidadeBase<Tarefa>
 {
-    public string Titulo { get; set; } = string.Empty;
+    public string? Titulo { get; set; }
     public PrioridadeTarefa Prioridade { get; set; }
     public DateTime DataCriacao { get; set; } = DateTime.Today;
     public DateTime? DataConclusao { get; set; }
@@ -90,7 +90,10 @@ public class Tarefa : EntidadeBase<Tarefa>
     {
         List<string> erros = [];
 
-        if (string.IsNullOrWhiteSpace(Titulo) || Titulo.Length < 2 || Titulo.Length > 100)
+        if (string.IsNullOrWhiteSpace(Titulo))
+            erros.Add("O campo \"Título\" deve ser preenchudo.");
+        
+        else if (Titulo.Length < 2 || Titulo.Length > 100)
             erros.Add("O campo \"Título\" deve conter entre 2 e 100 caracteres.");
 
         if (!Enum.IsDefined(Prioridade))

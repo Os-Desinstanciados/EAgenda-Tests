@@ -1,9 +1,9 @@
 using AutoMapper;
 using FluentResults;
-using eAgenda.WebApp.Compartilhado.Apresentacao.Extensions;
 using eAgenda.Aplicacao.Modulos.ModuloCompromisso;
 using eAgenda.Dominio.Modulos.ModuloCompromisso;
 using Microsoft.AspNetCore.Mvc;
+using eAgenda.WebApp.Compartilhado.Extensions;
 
 namespace eAgenda.WebApp.Modulos.ModuloCompromisso;
 

@@ -1,9 +1,9 @@
 using AutoMapper;
 using FluentResults;
-using eAgenda.WebApp.Compartilhado.Apresentacao.Extensions;
 using eAgenda.Aplicacao.Modulos.ModuloDespesa;
 using eAgenda.Dominio.Modulos.ModuloDespesa;
 using Microsoft.AspNetCore.Mvc;
+using eAgenda.WebApp.Compartilhado.Extensions;
 
 namespace eAgenda.WebApp.Modulos.ModuloDespesa;
 
