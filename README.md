@@ -1,153 +1,130 @@
-# e-Agenda
+# 📅 eAgenda
+
+![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)
+![C#](https://img.shields.io/badge/C%23-C%23-239120)
+[![Academia do Programador](https://img.shields.io/badge/Academia%20do%20Programador-Fullstack%202026-6f42c1)](https://www.academiadoprogramador.net/inicio)
+
+O eAgenda é uma aplicação web desenvolvida em ASP.NET Core MVC para o gerenciamento de compromissos, contatos, tarefas e despesas pessoais. O sistema permite organizar compromissos, categorizar despesas e acompanhar tarefas e seus itens, além de contar com autenticação de usuários e isolamento dos dados por usuário. O projeto também possui testes automatizados para validação das funcionalidades e regras de negócio implementadas.
 
 ## Projeto
 
-Desenvolvido durante o curso Fullstack da [Academia do Programador](https://www.academiadoprogramador.net) 2026
+Desenvolvido durante o curso **Fullstack 2026** da [Academia do Programador](https://www.academiadoprogramador.net/), com foco na aplicação prática de conceitos de desenvolvimento web, arquitetura de software, persistência de dados e testes automatizados.
+
+## Getting Started
+
+### Prerequisites
+
+Antes de executar o projeto, certifique-se de possuir as seguintes ferramentas instaladas:
+
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) ou superior
+- [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads)
+- [Git](https://git-scm.com/downloads)
+
+### Clone o repositório
+
+Clone o projeto e acesse o diretório da solução:
+
+```bash
+git clone https://github.com/Os-Desinstanciados/EAgenda-Tests.git
+cd EAgendaTests
+```
+
+### Configure o banco de dados
+
+Aplique as migrations existentes para criar e atualizar o banco de dados:
+
+```bash
+dotnet ef database update --project ./src/eAgenda.Infra --startup-project ./src/eAgenda.WebApp
+```
+
+### Testes
+
+O projeto conta com diferentes níveis de testes automatizados:
+
+| Teste | Tecnologia | Objetivo |
+|---|---|---|
+| `Unitários` | MSTest | Validar entidades e regras de negócio |
+| `Integração` | MSTest + Entity Framework Core | Validar a integração com a camada de persistência |
+| `End-to-End (E2E)` | MSTest + Playwright | Validar os principais fluxos através da interface da aplicação |
+
+**Examples:**
+
+🧪 Executar todos os testes:
+
+```bash
+dotnet test
+```
+
+🔬 Executar somente os testes unitários:
+
+```bash
+dotnet test ./tests/eAgenda.Testes.Unidade
+```
+
+🔗 Executar somente os testes de integração:
+
+```bash
+dotnet test ./tests/eAgenda.Testes.Integracao
+```
+
+🌐 Executar somente os testes E2E:
+
+```bash
+dotnet test ./tests/eAgenda.Testes.E2E
+```
+
+> 💡 **Tip:** Antes de executar os testes E2E pela primeira vez, certifique-se de que os navegadores do Playwright estejam instalados.
+
+### Run the app
+
+Execute a aplicação Web:
+
+```bash
+dotnet run --project ./src/eAgenda.WebApp
+```
+
+Após a inicialização, acesse no navegador o endereço exibido pelo terminal.
 
 ## Funcionalidades
 
-### 1. Módulo de Contatos
+- Gerenciamento de Contatos
+- Gerenciamento de Compromissos
+- Gerenciamento de Categorias
+- Gerenciamento de Despesas
+- Gerenciamento de Tarefas
+- Gerenciamento de Itens das tarefas
+- Acompanhamento do percentual de conclusão das tarefas
+- Autenticação de usuários
+- Isolamento dos dados por usuário
 
-Requisitos Funcionais
+## Tecnologias
 
-- O sistema deve permitir a inserção de novos contatos
-- O sistema deve permitir a edição de contatos já cadastrados
-- O sistema deve permitir excluir contatos já cadastrados
-- O sistema deve permitir visualizar contatos cadastrados
+- **ASP.NET Core MVC** — desenvolvimento da aplicação web
+- **Entity Framework Core** — persistência e acesso aos dados
+- **SQL Server** — banco de dados
+- **ASP.NET Core Identity** — autenticação e gerenciamento de usuários
+- **AutoMapper** — mapeamento entre entidades, DTOs e ViewModels
+- **FluentResults** — tratamento dos resultados das operações
+- **Bootstrap** — estilização e responsividade da interface
+- **MSTest** — testes automatizados
+- **Playwright** — testes End-to-End (E2E)
 
-Regras de Negócio
+## Arquitetura
 
-Campos obrigatórios:
+O projeto foi desenvolvido utilizando uma arquitetura em camadas, separando as responsabilidades da aplicação entre **Domínio, Aplicação, Infraestrutura e Apresentação**.
 
-- Nome (2-100 caracteres)
-- Email (formato válido)
-- Telefone (formato validado: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX)
-- Cargo (opcional)
-- Empresa (opcional)
+![Domínio](https://img.shields.io/badge/🧠_Domínio-Regras_de_Negócio-blue)
 
-- Não pode haver contatos com o mesmo email e/ou telefone.
-- Não permitir excluir um contato caso tenha compromissos vinculados
+Entidades, validações, regras de negócio e contratos dos repositórios.
 
-### 2. Módulo de Compromissos
+![Aplicação](https://img.shields.io/badge/⚙️_Aplicação-Serviços-purple)
 
-Requisitos Funcionais
+Serviços, DTOs e coordenação dos casos de uso da aplicação.
 
-- O sistema deve permitir a inserção de novos compromissos
-- O sistema deve permitir a edição de compromissos já cadastrados
-- O sistema deve permitir excluir compromissos já cadastrados
-- O sistema deve permitir visualizar compromissos cadastrados
+![Infraestrutura](https://img.shields.io/badge/🗄️_Infraestrutura-Persistência-orange)
 
-Regras de Negócio
+Persistência de dados, Entity Framework Core, repositórios, configurações ORM e migrations.
 
-Campos obrigatórios:
+![WebApp](https://img.shields.io/badge/🖥️_WebApp-MVC-green)
 
-- Assunto (2-100 caracteres)
-- Data de Ocorrência
-- Hora de Início
-- Hora de Término
-- Tipo de Compromisso (Remoto ou Presencial)
-- Local (caso presencial)
-- Link (caso remoto)
-- Contato (opcional)
-
-- Não pode haver conflito de horários entre compromissos
-
-### 3. Módulo de Categorias
-
-Requisitos Funcionais
-
-- O sistema deve permitir cadastrar novas categorias
-- O sistema deve permitir editar categorias existentes
-- O sistema deve permitir excluir categorias
-- O sistema deve permitir visualizar todas as categorias
-- O sistema deve permitir visualizar todas as despesas pertencentes a uma categoria
-  específica
-
-Regras de Negócio
-
-Campos obrigatórios:
-
-- Título (2-100 caracteres)
-- Despesas (cadastradas posteriormente)
-- Não pode haver categorias com mesmo título
-- Não deve permitir excluir categorias relacionadas a despesas.
-
-### 4. Módulo de Despesas
-
-Requisitos Funcionais
-
-- O sistema deve permitir cadastrar novas despesas
-- O sistema deve permitir editar despesas existentes
-- O sistema deve permitir excluir despesas
-- O sistema deve permitir visualizar todas as despesas
-
-Regras de Negócio
-
-Campos obrigatórios:
-
-- Descrição (2-100 caracteres)
-- Data de Ocorrência (opcional, data de cadastro por padrão)
-- Valor (R$)
-- Forma de Pagamento (À Vista, Crédito ou Débito),
-- Categorias (1 ou mais categorias)
-
-### 5. Módulo de Tarefas
-
-Requisitos Funcionais
-
-- O sistema deve permitir cadastrar novas tarefas
-- O sistema deve permitir editar tarefas existentes
-- O sistema deve permitir excluir tarefas
-- O sistema deve permitir visualizar todas as tarefas, as tarefas pendentes e as
-  tarefas concluídas
-- O sistema deve permitir visualizar as tarefas agrupadas por prioridade
-
-Regras de Negócio
-
-Campos obrigatórios:
-
-- Título (2-100 caracteres)
-- Prioridade (Baixa, Normal, Alta)
-- Data de Criação
-- Data de Conclusão
-- Status de Conclusão
-- Percentual Concluído,
-- Itens da Tarefa (opcionais)
-
-### 5.1 Itens de Tarefas
-
-Requisitos Funcionais
-
-- O sistema deve permitir adicionar ou remover itens em uma determinada tarefa
-- O sistema deve permitir concluir itens de tarefas, alterando o percentual (%) de
-  conclusão da tarefa.
-
-Regras de Negócio:
-
-Campos obrigatórios:
-
-- Título (2-100 caracteres)
-- Status de Conclusão
-- Tarefa
-
----
-
-## Como utilizar
-
-1. Clone o repositório ou baixe o código fonte.
-2. Abra o terminal ou o prompt de comando e navegue até a pasta raiz
-3. Utilize o comando abaixo para restaurar as dependências do projeto.
-
-   ```bash
-   dotnet restore
-   ```
-
-4. Para executar o projeto compilando em tempo real
-
-   ```bash
-   dotnet run --project src/eAgenda.WebApp
-   ```
-
-## Requisitos
-
-- .NET 10.0 SDK
+Interface da aplicação utilizando ASP.NET Core MVC, Controllers, Views, ViewModels e Bootstrap.
